@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 @Entity
-@Table(name="products")
+@Table(name = "products")
 public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -21,15 +21,44 @@ public class Product implements Serializable {
 	private long inOrder;
 	@Version
 	private long version;
-	
+
 	protected Product() {
-	}	
-	
-	protected Product(String name, long inStock) {
+	}
+
+	public Product(String name, long inStock, long inOrder) {
 		this.name = name;
 		this.inStock = inStock;
+		this.inOrder = inOrder;
 	}
-	
-	
-	
+
+	public long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public long getInStock() {
+		return inStock;
+	}
+
+	public long getInOrder() {
+		return inOrder;
+	}
+
+	public void subtractInStockAndInOrder(long quantity) {
+		if (quantity <= 0) {
+			throw new IllegalArgumentException();
+		}
+		inStock -= quantity;
+		inOrder -= quantity;
+	}
+
+	public boolean isDeliverableInQuantity(long quantity) {
+		if (quantity <= 0) {
+			throw new IllegalArgumentException();
+		}
+		return quantity <= inStock;
+	}
 }

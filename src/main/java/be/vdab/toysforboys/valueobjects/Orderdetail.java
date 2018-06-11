@@ -18,13 +18,9 @@ public class Orderdetail implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "productId")
 	private Product product;
-	@NumberFormat(pattern = "#,##0")
 	private long ordered;
-	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal priceEach;
-	@NumberFormat(pattern = "#,##0.00")
-	private BigDecimal value;
-	
+
 	protected Orderdetail() {
 	}
 
@@ -32,7 +28,6 @@ public class Orderdetail implements Serializable {
 		this.product = product;
 		this.ordered = ordered;
 		this.priceEach = priceEach;
-		this.value = priceEach.multiply(BigDecimal.valueOf(ordered));
 	}
 
 	public Product getProduct() {
@@ -48,6 +43,6 @@ public class Orderdetail implements Serializable {
 	}
 	
 	public BigDecimal getValue() {
-		return value;
+		return priceEach.multiply(BigDecimal.valueOf(ordered));
 	}
 }
