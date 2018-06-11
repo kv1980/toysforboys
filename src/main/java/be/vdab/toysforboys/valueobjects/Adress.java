@@ -28,13 +28,6 @@ public class Adress implements Serializable {
 		this.city = city;
 		this.state = state;
 		this.postalCode = postalCode;
-		setCountry(country);
-	}
-	
-	public void setCountry(Country country) {
-		if (country == null) {
-			throw new NullPointerException();
-		}
 		this.country = country;
 	}
 

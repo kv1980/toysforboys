@@ -3,11 +3,13 @@ package be.vdab.toysforboys.entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,13 +41,14 @@ public class Order implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "customerId")
 	private Customer customer;
+	@Enumerated(EnumType.STRING)
 	private Status status;
 	@Version
 	private long version;
 	@ElementCollection
 	@CollectionTable(name = "orderdetails", joinColumns = @JoinColumn(name = "orderId"))
 	@OrderBy("productId")
-	private List<Orderdetail> orderdetails;
+	private Set<Orderdetail> orderdetails;
 
 	protected Order() {
 	}
@@ -85,7 +88,7 @@ public class Order implements Serializable {
 		return status;
 	}
 
-	public List<Orderdetail> getOrderdetails() {
-		return Collections.unmodifiableList(orderdetails);
+	public Set<Orderdetail> getOrderdetails() {
+		return Collections.unmodifiableSet(orderdetails);
 	}
 }

@@ -46,19 +46,16 @@ public class Product implements Serializable {
 	public long getInOrder() {
 		return inOrder;
 	}
-
-	public void subtractInStockAndInOrder(long quantity) {
-		if (quantity <= 0) {
-			throw new IllegalArgumentException();
-		}
-		inStock -= quantity;
-		inOrder -= quantity;
-	}
-
+	
 	public boolean isDeliverableInQuantity(long quantity) {
 		if (quantity <= 0) {
 			throw new IllegalArgumentException();
 		}
 		return quantity <= inStock;
+	}
+
+	public void subtractInStockAndInOrder(long quantity) {
+		inStock -= quantity;
+		inOrder -= quantity;
 	}
 }
