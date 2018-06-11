@@ -3,6 +3,11 @@ package be.vdab.toysforboys.valueobjects;
 import java.io.Serializable;
 
 import javax.persistence.Embeddable;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import be.vdab.toysforboys.entities.Country;
 
 @Embeddable
 public class Adress implements Serializable {
@@ -11,15 +16,26 @@ public class Adress implements Serializable {
 	private String city;
 	private String state;
 	private String postalCode;
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@JoinColumn(name = "countryid")
+	private Country country;
 
 	protected Adress() {
 	}
 
-	public Adress(String streetAndNumber, String city, String state, String postalCode) {
+	public Adress(String streetAndNumber, String city, String state, String postalCode, Country country) {
 		this.streetAndNumber = streetAndNumber;
 		this.city = city;
 		this.state = state;
 		this.postalCode = postalCode;
+		setCountry(country);
+	}
+	
+	public void setCountry(Country country) {
+		if (country == null) {
+			throw new NullPointerException();
+		}
+		this.country = country;
 	}
 
 	public String getStreetAndNumber() {
@@ -36,5 +52,9 @@ public class Adress implements Serializable {
 
 	public String getPostalCode() {
 		return postalCode;
+	}
+	
+	public Country getCountry() {
+		return country;
 	}
 }
