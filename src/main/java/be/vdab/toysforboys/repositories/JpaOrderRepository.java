@@ -1,5 +1,6 @@
 package be.vdab.toysforboys.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -19,5 +20,10 @@ class JpaOrderRepository implements OrderRepository {
 	@Override
 	public Optional<Order> read(long id) {
 		return Optional.ofNullable(manager.find(Order.class, id));
+	}
+
+	@Override
+	public List<Order> findByStatusNorShippedNorCancelled() {
+		throw new UnsupportedOperationException();
 	}
 }

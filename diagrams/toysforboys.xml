@@ -11,22 +11,22 @@
 	</entity>
 
 	<entity>
-		<entity-name>be.vdab.toysforboys.entities.Country</entity-name>
+		<entity-name>be.vdab.toysforboys.entities.Product</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>128</entity-height>
-		<entity-X-Coordinate>100</entity-X-Coordinate>
-		<entity-Y-Coordinate>519</entity-Y-Coordinate>
+		<entity-height>168</entity-height>
+		<entity-X-Coordinate>810</entity-X-Coordinate>
+		<entity-Y-Coordinate>102</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>
 	</entity>
 
 	<entity>
-		<entity-name>be.vdab.toysforboys.entities.Product</entity-name>
+		<entity-name>be.vdab.toysforboys.entities.Country</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>168</entity-height>
-		<entity-X-Coordinate>810</entity-X-Coordinate>
-		<entity-Y-Coordinate>102</entity-Y-Coordinate>
+		<entity-height>128</entity-height>
+		<entity-X-Coordinate>100</entity-X-Coordinate>
+		<entity-Y-Coordinate>519</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
 		<relation-collapsed>false</relation-collapsed>
 		<basic-collapsed>false</basic-collapsed>

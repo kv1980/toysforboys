@@ -23,14 +23,6 @@ public class Adress implements Serializable {
 	protected Adress() {
 	}
 
-	public Adress(String streetAndNumber, String city, String state, String postalCode, Country country) {
-		this.streetAndNumber = streetAndNumber;
-		this.city = city;
-		this.state = state;
-		this.postalCode = postalCode;
-		this.country = country;
-	}
-
 	public String getStreetAndNumber() {
 		return streetAndNumber;
 	}

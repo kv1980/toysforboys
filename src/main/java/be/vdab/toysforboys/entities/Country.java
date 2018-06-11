@@ -23,10 +23,6 @@ public class Country implements Serializable {
 	protected Country() {
 	}
 
-	public Country(String name) {
-		this.name = name;
-	}
-
 	public long getId() {
 		return id;
 	}

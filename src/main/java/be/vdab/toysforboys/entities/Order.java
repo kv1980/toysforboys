@@ -52,13 +52,8 @@ public class Order implements Serializable {
 
 	protected Order() {
 	}
-
-	public Order(LocalDate required, String comments, Customer customer) {
-		this.ordered = LocalDate.now();
-		this.required = required;
-		this.comments = comments;
-		this.customer = customer;
-	}
+	
+	
 
 	public long getId() {
 		return id;
@@ -70,10 +65,6 @@ public class Order implements Serializable {
 
 	public LocalDate getRequired() {
 		return required;
-	}
-
-	public LocalDate getShipped() {
-		return shipped;
 	}
 
 	public String getComments() {
@@ -90,5 +81,9 @@ public class Order implements Serializable {
 
 	public Set<Orderdetail> getOrderdetails() {
 		return Collections.unmodifiableSet(orderdetails);
+	}
+	
+	public void changeShippedDate() {
+		this.shipped = LocalDate.now();
 	}
 }
