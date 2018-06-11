@@ -17,7 +17,7 @@ public class Adress implements Serializable {
 	private String state;
 	private String postalCode;
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-	@JoinColumn(name = "countryid")
+	@JoinColumn(name = "countryId")
 	private Country country;
 
 	protected Adress() {
