@@ -13,7 +13,7 @@
 	<entity>
 		<entity-name>be.vdab.toysforboys.entities.Country</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>108</entity-height>
+		<entity-height>128</entity-height>
 		<entity-X-Coordinate>100</entity-X-Coordinate>
 		<entity-Y-Coordinate>450</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
@@ -24,7 +24,7 @@
 	<entity>
 		<entity-name>be.vdab.toysforboys.entities.Customer</entity-name>
 		<entity-width>120</entity-width>
-		<entity-height>128</entity-height>
+		<entity-height>148</entity-height>
 		<entity-X-Coordinate>100</entity-X-Coordinate>
 		<entity-Y-Coordinate>52</entity-Y-Coordinate>
 		<primary-collapsed>false</primary-collapsed>
