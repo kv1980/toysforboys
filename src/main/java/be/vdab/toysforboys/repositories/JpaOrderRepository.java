@@ -23,7 +23,7 @@ class JpaOrderRepository implements OrderRepository {
 	}
 
 	@Override
-	public List<Order> findByStatusNorShippedNorCancelled() {
+	public List<Order> findUnshippedOrders() {
 		throw new UnsupportedOperationException();
 	}
 }

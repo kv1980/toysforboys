@@ -1,6 +1,7 @@
 package be.vdab.toysforboys.entities;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Set;
@@ -50,11 +51,10 @@ public class Order implements Serializable {
 	@OrderBy("productId")
 	private Set<Orderdetail> orderdetails;
 
+
 	protected Order() {
 	}
 	
-	
-
 	public long getId() {
 		return id;
 	}
@@ -81,6 +81,12 @@ public class Order implements Serializable {
 
 	public Set<Orderdetail> getOrderdetails() {
 		return Collections.unmodifiableSet(orderdetails);
+	}
+	
+	public BigDecimal getTotalValue() {
+		return orderdetails.stream()
+					       .map(detail -> detail.getValue())
+						   .reduce(BigDecimal.ZERO,(previousSum,value) -> previousSum.add(value));
 	}
 	
 	public void changeShippedDate() {

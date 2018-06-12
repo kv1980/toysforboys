@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 
@@ -24,6 +26,7 @@ import be.vdab.toysforboys.entities.Customer;
 import be.vdab.toysforboys.entities.Order;
 import be.vdab.toysforboys.enums.Status;
 import be.vdab.toysforboys.valueobjects.Adress;
+import be.vdab.toysforboys.valueobjects.Orderdetail;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -51,6 +54,7 @@ public class JpaOrderRepositoryTest extends AbstractTransactionalJUnit4SpringCon
 	
 	@Test
 	public void read_has_to_find_an_existing_order() {
+		System.out.println(idOfTestOrder());
 		assertTrue(repository.read(idOfTestOrder()).isPresent());
 	}
 	
@@ -62,44 +66,40 @@ public class JpaOrderRepositoryTest extends AbstractTransactionalJUnit4SpringCon
 	}
 	
 	@Test
-	public void read_has_to_find_status_of_an_existing_order() {
+	public void read_has_to_find_customer_of_an_existing_order() {
 		Order order = repository.read(idOfTestOrder()).get();
-		assertEquals(Status.PROCESSING,order.getStatus());
+		Customer customer = order.getCustomer();
+		Adress adress = customer.getAdress();
+		Country country = adress.getCountry();
+		assertEquals("testCustomerA",customer.getName());
+		assertEquals("testStreetAndNumber",adress.getStreetAndNumber());
+		assertEquals("testPostalCode",adress.getPostalCode());
+		assertEquals("testCity",adress.getCity());
+		assertEquals("testState",adress.getState());
+		assertEquals("testCountry",country.getName());
 	}
 	
 	@Test
 	public void read_has_to_find_comments_of_an_existing_order() {
 		Order order = repository.read(idOfTestOrder()).get();
-		assertEquals("testComments",order.getComments());
+		assertEquals("testCommentsA",order.getComments());
 	}
 	
 	@Test
-	public void read_has_to_find_customer_of_an_existing_order() {
+	public void read_has_to_find_orderdetails_of_an_existing_order() {
 		Order order = repository.read(idOfTestOrder()).get();
-		Customer customer = order.getCustomer();
-		assertEquals("testName",customer.getName());
+		Set<Orderdetail> details = order.getOrderdetails();
+		for (Orderdetail detail : details) {
+			switch (detail.getProduct().getName()) {
+				case "testProductA" : assertEquals(5,detail.getOrdered());
+									  assertEquals(BigDecimal.valueOf(10.01),detail.getPriceEach());
+									  break;
+				case "testProductB" : assertEquals(2,detail.getOrdered());
+				  					  assertEquals(BigDecimal.valueOf(20.02),detail.getPriceEach());
+				  					  break;
+				default : assertEquals(9999999,detail.getOrdered()); 
+					      break;
+			}
+		}
 	}
-	
-	@Test
-	public void read_has_to_find_adress_of_customer_of_an_existing_order() {
-		Order order = repository.read(idOfTestOrder()).get();
-		Customer customer = order.getCustomer();
-		Adress adress = customer.getAdress();
-		assertEquals("testStreetAndNumber",adress.getStreetAndNumber());
-		assertEquals("testPostalCode",adress.getPostalCode());
-		assertEquals("testCity",adress.getCity());
-		assertEquals("testState",adress.getState());
-	}
-	
-	@Test
-	public void read_has_to_find_country_of_adress_of_customer_of_an_existing_order() {
-		Order order = repository.read(idOfTestOrder()).get();
-		Customer customer = order.getCustomer();
-		Adress adress = customer.getAdress();
-		Country country = adress.getCountry();
-		assertEquals("testCountry",country.getName());
-	}
-	
-	
-	
 }
