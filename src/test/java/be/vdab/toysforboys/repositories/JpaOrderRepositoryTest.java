@@ -57,7 +57,6 @@ public class JpaOrderRepositoryTest extends AbstractTransactionalJUnit4SpringCon
 	
 	@Test
 	public void read_has_to_find_an_existing_order() {
-		System.out.println(idOfTestOrder());
 		assertTrue(repository.read(idOfTestOrder()).isPresent());
 	}
 	
@@ -97,7 +96,7 @@ public class JpaOrderRepositoryTest extends AbstractTransactionalJUnit4SpringCon
 				case "testProductA" : assertEquals(5,detail.getOrdered());
 									  assertEquals(BigDecimal.valueOf(10.01),detail.getPriceEach());
 									  break;
-				case "testProductB" : assertEquals(2,detail.getOrdered());
+				case "testProductB" : assertEquals(6,detail.getOrdered());
 				  					  assertEquals(BigDecimal.valueOf(20.02),detail.getPriceEach());
 				  					  break;
 				default : assertEquals(9999999,detail.getOrdered()); 

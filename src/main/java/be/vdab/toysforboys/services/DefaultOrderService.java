@@ -8,7 +8,10 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import be.vdab.toysforboys.entities.Order;
+import be.vdab.toysforboys.entities.Product;
+import be.vdab.toysforboys.exceptions.OrderNotFoundException;
 import be.vdab.toysforboys.repositories.OrderRepository;
+import be.vdab.toysforboys.valueobjects.Orderdetail;
 
 @Service
 @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
@@ -33,6 +36,20 @@ class DefaultOrderService implements OrderService {
 	@Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
 	@Override
 	public boolean updateOrderById(long id) {
-		throw new UnsupportedOperationException();
+		Optional<Order> optionalOrder = repository.read(id);
+		if (!optionalOrder.isPresent()){
+			throw new OrderNotFoundException();
+		}
+		Order order = optionalOrder.get();
+		if (order.isDeliverable()) {
+			order.setStatusOnSHIPPED();
+			order.setShippedDateOnToday();
+			for (Orderdetail detail : order.getOrderdetails()) {
+				Product product = detail.getProduct();
+				product.subtractInStockAndInOrder(detail.getOrdered());
+			}
+			return true;
+		}
+		return false;
 	}
 }

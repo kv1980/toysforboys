@@ -2,6 +2,7 @@ package be.vdab.toysforboys.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,13 +60,18 @@ public class DefaultOrderServiceUnitTest {
 	}
 	
 	@Test
-	public void updateOrderById_returns_true_and_updates_order_when_order_can_be_shipped() {
+	public void updateOrderById_updates_order_status_and_date_when_order_can_be_shipped() {
 		assertTrue(service.updateOrderById(1));
-		Order order = repository.read(1).get();
-		assertEquals(Status.SHIPPED,order.getStatus());
-		assertEquals(LocalDate.now(),order.getShipped());
-		Product productA = order.getOrderdetails().stream()
-												  .filter(detail -> detail.getProduct().getName().equals("testproduct1"))
+		assertEquals(Status.SHIPPED,order1.getStatus());
+		assertEquals(LocalDate.now(),order1.getShipped());
+		verify(repository).read(1);
+	}
+	
+	@Test
+	public void updateOrderById_updates_productquantities_inStock_and_inOrder_when_order_can_be_shipped() {
+		assertTrue(service.updateOrderById(1));
+		Product productA = order1.getOrderdetails().stream()
+												  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
 												  .findFirst()
 												  .get()
 												  .getProduct();
@@ -75,31 +81,36 @@ public class DefaultOrderServiceUnitTest {
 	}
 
 	@Test
-	public void updateOrderById_returns_false_and_does_not_update_order_when_order_cannot_be_shipped() {
+	public void updateOrderById_does_not_update_order_status_and_date_when_order_cannot_be_shipped() {
 		assertFalse(service.updateOrderById(2));
-		Order order = repository.read(2).get();
-		assertEquals(Status.PROCESSING,order.getStatus());
-		assertEquals(null,order.getShipped());
-		Product productA = order.getOrderdetails().stream()
-												  .filter(detail -> detail.getProduct().getName().equals("testproduct1"))
+		assertNotEquals(Status.SHIPPED,order2.getStatus());
+		assertNotEquals(LocalDate.now(),order2.getShipped());
+		verify(repository).read(2);
+	}
+	
+	@Test
+	public void updateOrderById_does_not_update_quantities_inStock_and_inOrder_of_any_ordered_product_when_order_cannot_be_shipped() {
+		assertFalse(service.updateOrderById(2));
+		Product productA = order2.getOrderdetails().stream()
+												  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
 												  .findFirst()
 												  .get()
 												  .getProduct();
 		
 		assertEquals(6,productA.getInStock());
 		assertEquals(5,productA.getInOrder());
-		Product productB = order.getOrderdetails().stream()
-				  .filter(detail -> detail.getProduct().getName().equals("testproduct2"))
-				  .findFirst()
-				  .get()
-				  .getProduct();
+		Product productB = order2.getOrderdetails().stream()
+				  								   .filter(detail -> detail.getProduct().getName().equals("testProduct2"))
+				  								   .findFirst()
+				  								   .get()
+				  								   .getProduct();
 		assertEquals(1,productB.getInStock());
 		assertEquals(2,productB.getInOrder());
 		verify(repository).read(2);
 	}
 	
 	@Test (expected = OrderNotFoundException.class)
-	public void updateOrderById_cannot_be_conducted_using_an_non_existing_order() {
+	public void updateOrderById_cannot_be_conducted_of_an_non_existing_order() {
 		service.updateOrderById(-1);
 		verify(repository).read(-1);
 	}
