@@ -28,6 +28,11 @@ public class Customer implements Serializable {
 	protected Customer() {
 	}
 
+	public Customer(String name, Adress adress) {
+		this.name = name;
+		this.adress = adress;
+	}
+
 	public long getId() {
 		return id;
 	}

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -51,10 +52,24 @@ public class Order implements Serializable {
 	@OrderBy("productId")
 	private Set<Orderdetail> orderdetails;
 
-
 	protected Order() {
 	}
 	
+	public Order(LocalDate required, Customer customer) {
+		this.ordered = LocalDate.now();
+		this.required = required;
+		this.customer = customer;
+		this.status = Status.PROCESSING;
+		this.orderdetails = new LinkedHashSet();
+	}
+	
+	public boolean add(Orderdetail detail) {
+		if (detail == null) {
+			throw new NullPointerException();
+		}
+		return orderdetails.add(detail);
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -65,6 +80,10 @@ public class Order implements Serializable {
 
 	public LocalDate getRequired() {
 		return required;
+	}
+	
+	public LocalDate getShipped() {
+		return shipped;
 	}
 
 	public String getComments() {
@@ -78,18 +97,33 @@ public class Order implements Serializable {
 	public Status getStatus() {
 		return status;
 	}
-
+	
 	public Set<Orderdetail> getOrderdetails() {
 		return Collections.unmodifiableSet(orderdetails);
 	}
 	
+	public boolean isDeliverable() {
+		boolean deliverable = true;
+		for (Orderdetail detail : orderdetails) {
+			if (!detail.isDeliverable()) {
+				deliverable = false;
+			}
+		}
+		return deliverable;
+	}
+	
+	public void setStatusOnSHIPPED() {
+		this.status = Status.SHIPPED;
+	}
+	
+	public void setShippedDateOnToday() {
+		this.shipped = LocalDate.now();
+	}
+
+		
 	public BigDecimal getTotalValue() {
 		return orderdetails.stream()
 					       .map(detail -> detail.getValue())
 						   .reduce(BigDecimal.ZERO,(previousSum,value) -> previousSum.add(value));
-	}
-	
-	public void changeShippedDate() {
-		this.shipped = LocalDate.now();
 	}
 }

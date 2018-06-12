@@ -24,7 +24,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import be.vdab.toysforboys.entities.Country;
 import be.vdab.toysforboys.entities.Customer;
 import be.vdab.toysforboys.entities.Order;
-import be.vdab.toysforboys.enums.Status;
 import be.vdab.toysforboys.valueobjects.Adress;
 import be.vdab.toysforboys.valueobjects.Orderdetail;
 

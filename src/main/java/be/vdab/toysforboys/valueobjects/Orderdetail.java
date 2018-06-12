@@ -40,7 +40,25 @@ public class Orderdetail implements Serializable {
 		return priceEach;
 	}
 	
+	public boolean isDeliverable() {
+		return ordered <= product.getInStock();
+	}
+	
 	public BigDecimal getValue() {
 		return priceEach.multiply(BigDecimal.valueOf(ordered));
+	}
+	
+	@Override
+	public int hashCode() {
+		return product.getName().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Orderdetail)) {
+			return false;
+			}
+		Orderdetail other = (Orderdetail) obj;
+		return product.getName().equals(other.getProduct().getName());
 	}
 }
