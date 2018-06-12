@@ -24,6 +24,7 @@ class JpaOrderRepository implements OrderRepository {
 
 	@Override
 	public List<Order> findUnshippedOrders() {
-		throw new UnsupportedOperationException();
+		return manager.createNamedQuery("Order.findUnshippedOrders",Order.class)
+				      .getResultList();
 	}
 }

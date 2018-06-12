@@ -2,10 +2,12 @@ package be.vdab.toysforboys.repositories;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
@@ -24,6 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import be.vdab.toysforboys.entities.Country;
 import be.vdab.toysforboys.entities.Customer;
 import be.vdab.toysforboys.entities.Order;
+import be.vdab.toysforboys.enums.Status;
 import be.vdab.toysforboys.valueobjects.Adress;
 import be.vdab.toysforboys.valueobjects.Orderdetail;
 
@@ -41,6 +44,7 @@ public class JpaOrderRepositoryTest extends AbstractTransactionalJUnit4SpringCon
 	JpaOrderRepository repository;
 	@Autowired
 	EntityManager manager;
+	private static final String ORDERS = "orders";
 	
 	private long idOfTestOrder() {
 		return super.jdbcTemplate.queryForObject("select id from orders where ordered ='2000-01-01'",Long.class);
@@ -99,6 +103,17 @@ public class JpaOrderRepositoryTest extends AbstractTransactionalJUnit4SpringCon
 				default : assertEquals(9999999,detail.getOrdered()); 
 					      break;
 			}
+		}
+	}
+	
+	@Test
+	public void findUnshippedOrders() {
+		List<Order> unshippedOrders = repository.findUnshippedOrders();
+		int numberOfUnshippedOrders = super.countRowsInTableWhere(ORDERS,"status not in ('SHIPPED','CANCELLED')");
+		assertEquals(numberOfUnshippedOrders,unshippedOrders.size());
+		for(Order order : unshippedOrders) {
+			assertNotEquals(Status.SHIPPED,order.getStatus());
+			assertNotEquals(Status.CANCELLED,order.getStatus());
 		}
 	}
 }
