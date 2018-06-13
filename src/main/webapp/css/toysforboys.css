@@ -1,0 +1,55 @@
+body {
+	background-color: #fff;
+	color: black;
+	font-family: sans-serif;
+}
+
+.fullwidth {
+	width: 100%;
+}
+
+
+ 
+
+th {
+	background-color : blue;
+	color : white;
+}
+
+th,td {
+    padding: 5px;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: #eee;
+}
+
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+#unshippedOrders th:nth-child(1), td:nth-child(1) {
+	width : 4%;
+}
+
+#unshippedOrders th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3) {
+	width : 8%;
+}
+
+#unshippedOrders th:nth-child(4), td:nth-child(4) {
+	width : 20%;
+}
+
+#unshippedOrders th:nth-child(5), td:nth-child(5) {
+	width : 50%;
+}
+
+th:nth-child(6), td:nth-child(6) {
+	width : 10%;
+}
+
+#unshippedOrders th:nth-child(7), td:nth-child(7) {
+	width : 8%;
+}
+

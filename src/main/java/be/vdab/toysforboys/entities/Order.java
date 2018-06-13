@@ -18,6 +18,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -29,6 +31,8 @@ import be.vdab.toysforboys.valueobjects.Orderdetail;
 
 @Entity
 @Table(name = "orders")
+@NamedEntityGraph(name = "Order.metCustomer", 
+			      attributeNodes = @NamedAttributeNode("customer"))
 public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id

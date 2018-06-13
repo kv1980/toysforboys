@@ -108,11 +108,13 @@ public class JpaOrderRepositoryTest extends AbstractTransactionalJUnit4SpringCon
 	@Test
 	public void findUnshippedOrders() {
 		List<Order> unshippedOrders = repository.findUnshippedOrders();
+		manager.clear();
 		int numberOfUnshippedOrders = super.countRowsInTableWhere(ORDERS,"status not in ('SHIPPED','CANCELLED')");
 		assertEquals(numberOfUnshippedOrders,unshippedOrders.size());
 		for(Order order : unshippedOrders) {
 			assertNotEquals(Status.SHIPPED,order.getStatus());
 			assertNotEquals(Status.CANCELLED,order.getStatus());
+			System.out.println(order.getCustomer().getName());
 		}
 	}
 }
