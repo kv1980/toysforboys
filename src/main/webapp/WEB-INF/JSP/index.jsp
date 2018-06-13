@@ -7,7 +7,7 @@
 <vdab:head title="Unshipped orders" />
 <body>
 	<h1>Unshipped orders</h1>
-	<table id="unshippedOrderes">
+	<table id="unshippedOrders">
 		<tr>
 			<th>ID</th>
 			<th>Ordered</th>
