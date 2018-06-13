@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 
 import be.vdab.toysforboys.enums.Status;
 import be.vdab.toysforboys.valueobjects.Orderdetail;
@@ -124,8 +125,8 @@ public class Order implements Serializable {
 		this.shipped = LocalDate.now();
 	}
 
-		
-	public BigDecimal getTotalValue() {
+	@NumberFormat(pattern = "#,##0.00")
+	public BigDecimal getValue() {
 		return orderdetails.stream()
 					       .map(detail -> detail.getValue())
 						   .reduce(BigDecimal.ZERO,(previousSum,value) -> previousSum.add(value));

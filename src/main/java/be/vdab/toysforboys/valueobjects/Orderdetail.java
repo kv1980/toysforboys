@@ -8,6 +8,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
+
 import be.vdab.toysforboys.entities.Product;
 
 @Embeddable
@@ -17,6 +20,7 @@ public class Orderdetail implements Serializable {
 	@JoinColumn(name = "productId")
 	private Product product;
 	private long ordered;
+	@NumberFormat(pattern = "#,##0.00")
 	private BigDecimal priceEach;
 
 	protected Orderdetail() {
@@ -44,6 +48,7 @@ public class Orderdetail implements Serializable {
 		return ordered <= product.getInStock();
 	}
 	
+	@NumberFormat(pattern = "#,##0.00")
 	public BigDecimal getValue() {
 		return priceEach.multiply(BigDecimal.valueOf(ordered));
 	}

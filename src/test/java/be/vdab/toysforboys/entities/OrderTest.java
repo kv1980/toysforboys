@@ -63,6 +63,6 @@ public class OrderTest {
 	
 	@Test
 	public void getTotalValue_counts_the_values_of_the_orderdetails() {
-		assertEquals(BigDecimal.valueOf(90.09),order2.getTotalValue());
+		assertEquals(BigDecimal.valueOf(90.09),order2.getValue());
 	}
 }

@@ -69,12 +69,17 @@ th:nth-child(5), td:nth-child(5) {
 	width : 100px;
 }
 
-#orderdetails  tr td:nth-child(1),
-               tr td:nth-child(2),
-               tr td:nth-child(3),
-               tr td:nth-child(4) {
+#orderdetails  tr td:nth-child(1) {
 	padding-right : 10px;
 	text-align : right;
 }
+
+#orderdetails  tr td:nth-child(2),
+               tr td:nth-child(4) {
+	padding-right : 30px;
+	text-align : right;
+}
+
+
 
 
