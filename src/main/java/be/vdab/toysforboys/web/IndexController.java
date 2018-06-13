@@ -21,4 +21,9 @@ class IndexController {
 	ModelAndView index() {
 		return new ModelAndView(VIEW,"unshippedOrders",service.findUnshippedOrders());
 	}
+	
+	@GetMapping (params = "ordersToShip")
+	ModelAndView afterSetAsShipped() {
+		return new ModelAndView(VIEW,"unshippedOrders",service.findUnshippedOrders());
+	}
 }
