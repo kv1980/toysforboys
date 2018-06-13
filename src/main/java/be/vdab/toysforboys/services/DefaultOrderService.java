@@ -35,7 +35,7 @@ class DefaultOrderService implements OrderService {
 	
 	@Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
 	@Override
-	public boolean updateOrderById(long id) {
+	public boolean shipOrderById(long id) {
 		Optional<Order> optionalOrder = repository.read(id);
 		if (!optionalOrder.isPresent()){
 			throw new OrderNotFoundException();

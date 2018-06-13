@@ -61,7 +61,7 @@ public class DefaultOrderServiceUnitTest {
 	
 	@Test
 	public void updateOrderById_updates_order_status_and_date_when_order_can_be_shipped() {
-		assertTrue(service.updateOrderById(1));
+		assertTrue(service.shipOrderById(1));
 		assertEquals(Status.SHIPPED,order1.getStatus());
 		assertEquals(LocalDate.now(),order1.getShipped());
 		verify(repository).read(1);
@@ -69,7 +69,7 @@ public class DefaultOrderServiceUnitTest {
 	
 	@Test
 	public void updateOrderById_updates_productquantities_inStock_and_inOrder_when_order_can_be_shipped() {
-		assertTrue(service.updateOrderById(1));
+		assertTrue(service.shipOrderById(1));
 		Product productA = order1.getOrderdetails().stream()
 												  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
 												  .findFirst()
@@ -82,7 +82,7 @@ public class DefaultOrderServiceUnitTest {
 
 	@Test
 	public void updateOrderById_does_not_update_order_status_and_date_when_order_cannot_be_shipped() {
-		assertFalse(service.updateOrderById(2));
+		assertFalse(service.shipOrderById(2));
 		assertNotEquals(Status.SHIPPED,order2.getStatus());
 		assertNotEquals(LocalDate.now(),order2.getShipped());
 		verify(repository).read(2);
@@ -90,7 +90,7 @@ public class DefaultOrderServiceUnitTest {
 	
 	@Test
 	public void updateOrderById_does_not_update_quantities_inStock_and_inOrder_of_any_ordered_product_when_order_cannot_be_shipped() {
-		assertFalse(service.updateOrderById(2));
+		assertFalse(service.shipOrderById(2));
 		Product productA = order2.getOrderdetails().stream()
 												  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
 												  .findFirst()
@@ -111,7 +111,7 @@ public class DefaultOrderServiceUnitTest {
 	
 	@Test (expected = OrderNotFoundException.class)
 	public void updateOrderById_cannot_be_conducted_of_an_non_existing_order() {
-		service.updateOrderById(-1);
+		service.shipOrderById(-1);
 		verify(repository).read(-1);
 	}
 }

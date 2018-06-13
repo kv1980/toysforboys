@@ -1,3 +1,3 @@
 insert into products(name, scale, inStock, inOrder, price, productlineId)
-values("testProductA","1:10",10,5,100,1),
-      ("testProductB","1:20",20,35,200,2);
+values('testProductA','1:10',10,5,100,1),
+      ('testProductB','1:20',20,35,200,2);

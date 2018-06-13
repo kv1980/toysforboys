@@ -50,7 +50,7 @@ public class DefaultOrderServiceIntegrationTest extends AbstractTransactionalJUn
 	@Test
 	public void updateOrderById_updates_order_status_and_date_when_order_can_be_shipped() {
 		long id = idVanOrder1();
-		assertTrue(service.updateOrderById(id));
+		assertTrue(service.shipOrderById(id));
 		manager.flush();
 		assertEquals("SHIPPED",super.jdbcTemplate.queryForObject("select status from orders where id =?",String.class,id));
 		assertEquals(LocalDate.now(),super.jdbcTemplate.queryForObject("select shipped from orders where id =?",LocalDate.class,id));
@@ -59,18 +59,18 @@ public class DefaultOrderServiceIntegrationTest extends AbstractTransactionalJUn
 	@Test
 	public void updateOrderById_updates_quantities_inStock_and_inOrder_of_all_ordered_products_when_order_can_be_shipped() {
 		long id = idVanOrder1();
-		assertTrue(service.updateOrderById(id));
+		assertTrue(service.shipOrderById(id));
 		manager.flush();
-		assertEquals(5,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductA'",Long.class,id).longValue());
-		assertEquals(0,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductA'",Long.class,id).longValue());
-		assertEquals(14,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductB'",Long.class,id).longValue());
-		assertEquals(29,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductB'",Long.class,id).longValue());
+		assertEquals(5,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductA'",Long.class).longValue());
+		assertEquals(0,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductA'",Long.class).longValue());
+		assertEquals(14,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductB'",Long.class).longValue());
+		assertEquals(29,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductB'",Long.class).longValue());
 	}
 
 	@Test
 	public void updateOrderById_does_not_update_order_status_and_date_when_order_cannot_be_shipped() {
 		long id = idVanOrder2();
-		assertFalse(service.updateOrderById(id));
+		assertFalse(service.shipOrderById(id));
 		manager.flush();
 		assertNotEquals("SHIPPED",super.jdbcTemplate.queryForObject("select status from orders where id =?",String.class,id));
 		assertNotEquals(LocalDate.now(),super.jdbcTemplate.queryForObject("select shipped from orders where id =?",LocalDate.class,id));
@@ -79,11 +79,11 @@ public class DefaultOrderServiceIntegrationTest extends AbstractTransactionalJUn
 	@Test
 	public void updateOrderById_does_not_update_quantities_inStock_and_inOrder_of_any_ordered_product_when_order_cannot_be_shipped() {
 		long id = idVanOrder2();
-		assertFalse(service.updateOrderById(id));
+		assertFalse(service.shipOrderById(id));
 		manager.flush();
-		assertEquals(10,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductA'",Integer.class,id).intValue());
-		assertEquals(5,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductA'",Integer.class,id).intValue());
-		assertEquals(20,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductB'",Integer.class,id).intValue());
-		assertEquals(35,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductB'",Integer.class,id).intValue());
+		assertEquals(10,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductA'",Long.class).longValue());
+		assertEquals(5,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductA'",Long.class).longValue());
+		assertEquals(20,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductB'",Long.class).longValue());
+		assertEquals(35,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductB'",Long.class).longValue());
 	}
 }
