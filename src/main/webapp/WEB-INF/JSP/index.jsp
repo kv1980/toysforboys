@@ -7,7 +7,10 @@
 <vdab:head title="Unshipped orders" />
 <body>
 	<h1>Unshipped orders</h1>
-	<form action='/index' method='get' id='form'>
+	<c:if test='${not empty param.boodschap}'>
+		<p>${param.boodschap}</p>
+	</c:if>
+	<form action='/' method='post' id='form'>
 	<table id="unshippedOrders">
 		<tr>
 			<th>ID</th>
@@ -50,7 +53,7 @@
 						</c:when>
 					</c:choose>
 				</td>
-				<td><input type='checkbox' name='ordersToShip' value='${order.id}' /></td>
+				<td><input type='checkbox' name='orderToShipId' value='${order.id}' /></td>
 			</tr>			
 		</c:forEach>
 	</table>
@@ -58,7 +61,7 @@
 	</form>
 	<script>
 		document.getElementById('form').onsubmit = function() {
-			document.getElementById('setAsShippedButton').disabled = true;
+			document.getElementById('SetAsShippedButton').disabled = true;
 		}
 	</script>
 </body>
