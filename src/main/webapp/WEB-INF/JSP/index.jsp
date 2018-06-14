@@ -7,8 +7,8 @@
 <vdab:head title="Unshipped orders" />
 <body>
 	<h1>Unshipped orders</h1>
-	<c:if test='${not empty param.boodschap}'>
-		<p>${param.boodschap}</p>
+	<c:if test='${not empty param.failedOrderIds}'>
+		<p>${param.failedOrderIds}</p>
 	</c:if>
 	<form action='/' method='post' id='form'>
 	<table id="unshippedOrders">

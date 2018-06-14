@@ -1,7 +1,9 @@
 package be.vdab.toysforboys.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,14 +30,13 @@ class IndexController {
 	
 	@PostMapping (params = "orderToShipId")
 	String afterSetAsShipped(long[] orderToShipId, RedirectAttributes redirectAttributes) {
-		StringBuilder boodschap = new StringBuilder();
+		List<Long> failedOrderIds = new ArrayList<>();
 		for (long id : orderToShipId) {
 			if (!service.shipOrderById(id)) {
-				boodschap.append(id);
-				boodschap.append(",");
+				failedOrderIds.add(id);
 			}
 		}
-		redirectAttributes.addAttribute("boodschap",boodschap);
+		redirectAttributes.addAttribute("failedOrderIds",failedOrderIds);
 		return REDIRECT_VIEW;
 	}
 }
