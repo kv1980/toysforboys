@@ -44,10 +44,10 @@
 						<td>
 							<c:choose>
 								<c:when test='${orderdetail.deliverable}'>
-									&check;
+									<p id='check'>&check;</p>
 								</c:when>
 								<c:otherwise>
-									&cross;
+									<p id='cross'>&cross;</p>
 								</c:otherwise>
 							</c:choose>
 						</td>
