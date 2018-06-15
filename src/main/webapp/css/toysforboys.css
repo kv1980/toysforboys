@@ -8,6 +8,13 @@ body {
 	width: 100%;
 }
 
+#failedErrorMessage {
+	font-size: 1.5em;
+	font-weight: bold;
+	color : red;
+	background-color : yellow;
+	margin-bottom : 0.67em;;
+}
 
 th {
 	background-color : #005580;

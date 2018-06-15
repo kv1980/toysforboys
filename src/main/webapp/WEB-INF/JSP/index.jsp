@@ -8,7 +8,18 @@
 <body>
 	<h1>Unshipped orders</h1>
 	<c:if test='${not empty param.failedOrderIds}'>
-		<p>${param.failedOrderIds}</p>
+		<div id='failedErrorMessage'>
+			Shipping failed for orders(s) 
+			<c:forEach var='id' items='${param.failedOrderIds}' varStatus='status'>
+				<c:choose>
+					<c:when test="${status.first}"></c:when>
+					<c:when test="${status.last}"> and </c:when>
+					<c:otherwise>, </c:otherwise>
+				</c:choose>
+				${id}
+				</c:forEach>
+			 not enough stock
+		</div>
 	</c:if>
 	<form action='/' method='post' id='form'>
 	<table id="unshippedOrders">
