@@ -45,7 +45,7 @@ public class Adress implements Serializable {
 	public String getPostalCode() {
 		return postalCode;
 	}
-	
+
 	public Country getCountry() {
 		return country;
 	}

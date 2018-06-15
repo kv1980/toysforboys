@@ -44,15 +44,15 @@ public class Product implements Serializable {
 	public long getInOrder() {
 		return inOrder;
 	}
-	
+
 	public void addInStock(long quantity) {
 		inStock += quantity;
 	}
-	
+
 	public void addInOrder(long quantity) {
 		inOrder += quantity;
 	}
-	
+
 	public void subtractInStockAndInOrder(long quantity) {
 		inStock -= quantity;
 		inOrder -= quantity;

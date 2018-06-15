@@ -43,7 +43,7 @@
 						<td><spring:eval expression='orderdetail.value'/></td>
 						<td>
 							<c:choose>
-								<c:when test='${orderdetail.ordered <= orderdetail.product.inStock}'>
+								<c:when test='${orderdetail.deliverable}'>
 									&check;
 								</c:when>
 								<c:otherwise>

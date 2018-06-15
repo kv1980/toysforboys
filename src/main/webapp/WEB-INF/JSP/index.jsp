@@ -18,7 +18,7 @@
 				</c:choose>
 				${id}
 				</c:forEach>
-			 not enough stock
+			 : not enough stock
 		</div>
 	</c:if>
 	<form action='/' method='post' id='form'>

@@ -32,8 +32,7 @@ import be.vdab.toysforboys.valueobjects.Orderdetail;
 
 @Entity
 @Table(name = "orders")
-@NamedEntityGraph(name = "Order.metCustomer", 
-			      attributeNodes = @NamedAttributeNode("customer"))
+@NamedEntityGraph(name = "Order.metCustomer", attributeNodes = @NamedAttributeNode("customer"))
 public class Order implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -59,20 +58,13 @@ public class Order implements Serializable {
 
 	protected Order() {
 	}
-	
+
 	public Order(LocalDate required, Customer customer) {
 		this.ordered = LocalDate.now();
 		this.required = required;
 		this.customer = customer;
 		this.status = Status.PROCESSING;
 		this.orderdetails = new LinkedHashSet();
-	}
-	
-	public boolean add(Orderdetail detail) {
-		if (detail == null) {
-			throw new NullPointerException();
-		}
-		return orderdetails.add(detail);
 	}
 
 	public long getId() {
@@ -86,7 +78,7 @@ public class Order implements Serializable {
 	public LocalDate getRequired() {
 		return required;
 	}
-	
+
 	public LocalDate getShipped() {
 		return shipped;
 	}
@@ -102,11 +94,32 @@ public class Order implements Serializable {
 	public Status getStatus() {
 		return status;
 	}
-	
+
 	public Set<Orderdetail> getOrderdetails() {
 		return Collections.unmodifiableSet(orderdetails);
 	}
-	
+
+	@NumberFormat(pattern = "#,##0.00")
+	public BigDecimal getValue() {
+		return orderdetails.stream().map(detail -> detail.getValue()).reduce(BigDecimal.ZERO,
+				(previousSum, value) -> previousSum.add(value));
+	}
+
+	public void setStatusOnSHIPPED() {
+		this.status = Status.SHIPPED;
+	}
+
+	public void setShippedDateOnToday() {
+		this.shipped = LocalDate.now();
+	}
+
+	public boolean add(Orderdetail detail) {
+		if (detail == null) {
+			throw new NullPointerException();
+		}
+		return orderdetails.add(detail);
+	}
+
 	public boolean isDeliverable() {
 		boolean deliverable = true;
 		for (Orderdetail detail : orderdetails) {
@@ -115,20 +128,5 @@ public class Order implements Serializable {
 			}
 		}
 		return deliverable;
-	}
-	
-	public void setStatusOnSHIPPED() {
-		this.status = Status.SHIPPED;
-	}
-	
-	public void setShippedDateOnToday() {
-		this.shipped = LocalDate.now();
-	}
-
-	@NumberFormat(pattern = "#,##0.00")
-	public BigDecimal getValue() {
-		return orderdetails.stream()
-					       .map(detail -> detail.getValue())
-						   .reduce(BigDecimal.ZERO,(previousSum,value) -> previousSum.add(value));
 	}
 }

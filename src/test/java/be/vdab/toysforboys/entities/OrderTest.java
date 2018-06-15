@@ -23,19 +23,32 @@ public class OrderTest {
 	@Before
 	public void before() {
 		product1 = new Product("testProduct1");
-		product1.addInStock(6);
+			product1.addInStock(6);
 		product1.addInOrder(5);
 		product2 = new Product("testProduct2");
-		product2.addInStock(1);
-		product2.addInOrder(2);
+			product2.addInStock(1);
+			product2.addInOrder(2);
 		detail1 = new Orderdetail(product1,5,BigDecimal.valueOf(10.01));
 		detail2 = new Orderdetail(product2,2,BigDecimal.valueOf(20.02));
 		customer = new Customer("testCustomer", new Adress("testStreetAndNumber","testPostalCode","testCity", new Country("testCountry")));
 		order1 = new Order(LocalDate.of(2018, 06, 19),customer);
-		order1.add(detail1);
+			order1.add(detail1);
 		order2 = new Order(LocalDate.of(2018, 06, 19),customer);
-		order2.add(detail1);
-		order2.add(detail2);
+			order2.add(detail1);
+			order2.add(detail2);
+	}
+	
+	@Test
+	public void add_must_add_an_existing_orderdetail() {
+		order1.add(detail2);
+		assertEquals(2,order1.getOrderdetails().size());
+		assertTrue(order1.getOrderdetails().contains(detail1));
+		assertTrue(order1.getOrderdetails().contains(detail2));
+	}
+	
+	@Test (expected = NullPointerException.class)
+	public void add_cannot_add_null() {
+		order1.add(null);
 	}
 	
 	@Test

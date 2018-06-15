@@ -39,4 +39,9 @@ class IndexController {
 		redirectAttributes.addAttribute("failedOrderIds",failedOrderIds);
 		return REDIRECT_VIEW;
 	}
+	
+	@PostMapping ()
+	String afterSetAsShippedWithNoOrderIds() {
+		return REDIRECT_VIEW;
+	}
 }

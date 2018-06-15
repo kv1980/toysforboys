@@ -19,7 +19,7 @@ public class Country implements Serializable {
 	private String name;
 	@Version
 	private long version;
-	
+
 	protected Country() {
 	}
 

@@ -95,8 +95,7 @@ public class DefaultOrderServiceUnitTest {
 												  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
 												  .findFirst()
 												  .get()
-												  .getProduct();
-		
+												  .getProduct();		
 		assertEquals(6,productA.getInStock());
 		assertEquals(5,productA.getInOrder());
 		Product productB = order2.getOrderdetails().stream()
