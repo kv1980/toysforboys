@@ -25,8 +25,10 @@ public class Product implements Serializable {
 	protected Product() {
 	}
 
-	public Product(String name) {
+	public Product(String name, long inStock, long inOrder) {
 		this.name = name;
+		this.inStock = inStock;
+		this.inOrder = inOrder;
 	}
 
 	public long getId() {
@@ -45,15 +47,7 @@ public class Product implements Serializable {
 		return inOrder;
 	}
 
-	public void addInStock(long quantity) {
-		inStock += quantity;
-	}
-
-	public void addInOrder(long quantity) {
-		inOrder += quantity;
-	}
-
-	public void subtractInStockAndInOrder(long quantity) {
+	public void deliver(long quantity) {
 		inStock -= quantity;
 		inOrder -= quantity;
 	}

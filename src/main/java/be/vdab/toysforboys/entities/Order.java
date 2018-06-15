@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -54,17 +54,17 @@ public class Order implements Serializable {
 	@ElementCollection
 	@CollectionTable(name = "orderdetails", joinColumns = @JoinColumn(name = "orderId"))
 	@OrderBy("productId")
-	private Set<Orderdetail> orderdetails;
+	private List<Orderdetail> orderdetails;
 
 	protected Order() {
 	}
 
-	public Order(LocalDate required, Customer customer) {
+	public Order(LocalDate required, Customer customer, List<Orderdetail> orderdetails) {
 		this.ordered = LocalDate.now();
 		this.required = required;
 		this.customer = customer;
 		this.status = Status.PROCESSING;
-		this.orderdetails = new LinkedHashSet();
+		this.orderdetails = orderdetails;
 	}
 
 	public long getId() {
@@ -95,8 +95,8 @@ public class Order implements Serializable {
 		return status;
 	}
 
-	public Set<Orderdetail> getOrderdetails() {
-		return Collections.unmodifiableSet(orderdetails);
+	public List<Orderdetail> getOrderdetails() {
+		return Collections.unmodifiableList(orderdetails);
 	}
 
 	@NumberFormat(pattern = "#,##0.00")
@@ -105,28 +105,22 @@ public class Order implements Serializable {
 				(previousSum, value) -> previousSum.add(value));
 	}
 
-	public void setStatusOnSHIPPED() {
-		this.status = Status.SHIPPED;
-	}
-
-	public void setShippedDateOnToday() {
-		this.shipped = LocalDate.now();
-	}
-
-	public boolean add(Orderdetail detail) {
-		if (detail == null) {
-			throw new NullPointerException();
-		}
-		return orderdetails.add(detail);
-	}
-
-	public boolean isDeliverable() {
-		boolean deliverable = true;
+	public boolean isShippable() {
 		for (Orderdetail detail : orderdetails) {
 			if (!detail.isDeliverable()) {
-				deliverable = false;
+				return false;
 			}
 		}
-		return deliverable;
+		return true;
+	}
+	
+	public void ship() {
+		this.status = Status.SHIPPED;
+		this.shipped = LocalDate.now();
+		for (Orderdetail detail : orderdetails) {
+			Product product = detail.getProduct();
+			long quantity = detail.getOrdered();
+			product.deliver(quantity);
+		}
 	}
 }

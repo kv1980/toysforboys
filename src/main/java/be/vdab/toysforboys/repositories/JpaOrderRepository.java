@@ -11,7 +11,7 @@ import be.vdab.toysforboys.entities.Order;
 
 @Repository
 class JpaOrderRepository implements OrderRepository {
-	EntityManager manager;
+	private final EntityManager manager;
 	
 	public JpaOrderRepository(EntityManager manager) {
 		this.manager = manager;

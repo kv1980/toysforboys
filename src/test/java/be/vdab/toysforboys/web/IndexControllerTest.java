@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,18 +30,22 @@ public class IndexControllerTest {
 	private IndexController controller;
 	@Mock 
 	private OrderService orderService;
-	private Order order1, order2;
 	List<Order> unshippedOrders;
 
 	@Before
 	public void before() {
+		Orderdetail detail1 = new Orderdetail(new Product("testProduct1",6,5),5,BigDecimal.valueOf(10.01));
+		Orderdetail detail2 = new Orderdetail(new Product("testProduct2",20,35),2,BigDecimal.valueOf(20.02));
+		List<Orderdetail> orderdetails1 = new ArrayList<>();
+			orderdetails1.add(detail1);
+		List<Orderdetail> orderdetails2 = new ArrayList<>();
+			orderdetails1.add(detail1);
+			orderdetails1.add(detail2);
+		Customer customer = new Customer("testCustomer", new Adress("testStreetAndNumber","testPostalCode","testCity", new Country("testCountry")));
+		Order order1 = new Order(LocalDate.of(2018, 06, 19),customer,orderdetails1);
+		Order order2 = new Order(LocalDate.of(2018, 06, 19),customer,orderdetails2);
 		unshippedOrders = new LinkedList<>();
-			order1 = new Order(LocalDate.of(2018, 06, 19),new Customer("testCustomer", new Adress("testStreetAndNumber","testPostalCode","testCity", new Country("testCountry"))));
-			order1.add(new Orderdetail(new Product("testProduct1"),5,BigDecimal.valueOf(10.01)));
 		unshippedOrders.add(order1);
-			order2 = new Order(LocalDate.of(2018, 06, 19),new Customer("testCustomer", new Adress("testStreetAndNumber","testPostalCode","testCity", new Country("testCountry"))));
-			order2.add(new Orderdetail(new Product("testProduct1"),5,BigDecimal.valueOf(10.01)));
-			order2.add(new Orderdetail(new Product("testProduct2"),2,BigDecimal.valueOf(20.02)));
 		unshippedOrders.add(order2);
 			
 		controller = new IndexController(orderService);

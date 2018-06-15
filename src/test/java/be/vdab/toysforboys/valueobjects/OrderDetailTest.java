@@ -18,10 +18,8 @@ public class OrderDetailTest {
 	
 	@Before
 	public void before(){
-		product1 = new Product("testName1");
-		product1.addInStock(20);
-		product1.addInOrder(35);
-		product2 = new Product("testName2");
+		product1 = new Product("testName1",20L,35L);
+		product2 = new Product("testName2",0L,0L);
 		orderdetail1 = new Orderdetail(product1,5,BigDecimal.TEN);
 		orderdetail1copy = new Orderdetail(product1,5,BigDecimal.TEN);
 		orderdetail2 = new Orderdetail(product2,30,BigDecimal.TEN);
@@ -33,12 +31,12 @@ public class OrderDetailTest {
 	}
 	
 	@Test
-	public void isDeliverable_returns_true_when_deliverable() {
+	public void orderdetail_is_deliverable_when_ordered_quantity_is_less_or_even_then_productquantity_in_stock() {
 		assertTrue(orderdetail1.isDeliverable());
 	}
 	
 	@Test
-	public void isDeliverable_returns_false_when_not_deliverable() {
+	public void orderdetail_is_not_deliverable_when_ordered_quantity_is_more_then_productquantity_in_stock() {
 		assertFalse(orderdetail2.isDeliverable());
 	}
 	

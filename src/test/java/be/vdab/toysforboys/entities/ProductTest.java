@@ -10,15 +10,13 @@ public class ProductTest {
 	
 	@Before
 	public void before(){
-		product = new Product("testName");
-		product.addInStock(20);
-		product.addInOrder(15);
+		product = new Product("testName",20,35);
 	}
 	
 	@Test
-	public void subtractInStockAndInOrder() {
-		product.subtractInStockAndInOrder(5);		
+	public void deliver() {
+		product.deliver(5);		
 		assertEquals(15,product.getInStock());
-		assertEquals(10,product.getInOrder());
+		assertEquals(30,product.getInOrder());
 	}
 }

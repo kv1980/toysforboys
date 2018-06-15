@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +35,6 @@ public class DefaultOrderServiceUnitTest {
 	private DefaultOrderService service;
 	@Mock
 	private OrderRepository repository;
-	private Product product1,product2;
 	private Orderdetail detail1,detail2;
 	private Customer customer;
 	private Order order1,order2;
@@ -42,23 +42,20 @@ public class DefaultOrderServiceUnitTest {
 	
 	@Before
 	public void before() {
-		product1 = new Product("testProduct1");
-		product1.addInStock(6);
-		product1.addInOrder(5);
-		product2 = new Product("testProduct2");
-		product2.addInStock(1);
-		product2.addInOrder(2);
-		detail1 = new Orderdetail(product1,5,BigDecimal.valueOf(10.01));
-		detail2 = new Orderdetail(product2,2,BigDecimal.valueOf(20.02));
+		detail1 = new Orderdetail(new Product("testProduct1",6,5),5,BigDecimal.valueOf(10.01));
+		detail2 = new Orderdetail(new Product("testProduct2",1,2),2,BigDecimal.valueOf(20.02));
+		List<Orderdetail> orderdetails1 = new ArrayList<>();
+			orderdetails1.add(detail1);
+		List<Orderdetail> orderdetails2 = new ArrayList<>();
+			orderdetails2.add(detail1);
+			orderdetails2.add(detail2);
 		customer = new Customer("testCustomer", new Adress("testStreetAndNumber","testPostalCode","testCity", new Country("testCountry")));
-		order1 = new Order(LocalDate.of(2018, 06, 19),customer);
-		order1.add(detail1);
-		order2 = new Order(LocalDate.of(2018, 06, 19),customer);
-		order2.add(detail1);
-		order2.add(detail2);
+		order1 = new Order(LocalDate.of(2018, 06, 19),customer,orderdetails1);
+		order2 = new Order(LocalDate.of(2018, 06, 19),customer,orderdetails2);
 		when(repository.read(-1)).thenReturn(Optional.empty());
 		when(repository.read(1)).thenReturn(Optional.of(order1));
 		when(repository.read(2)).thenReturn(Optional.of(order2));
+		
 		unshippableOrders = new LinkedList<>();
 		unshippableOrders.add(order2);
 		when(repository.findUnshippedOrders()).thenReturn(unshippableOrders);
@@ -83,14 +80,6 @@ public class DefaultOrderServiceUnitTest {
 		assertEquals(1,testOrders.size());
 		assertTrue(testOrders.contains(order2));
 		verify(repository).findUnshippedOrders();
-	}
-	
-	@Test
-	public void updateOrderById_updates_order_status_and_date_when_order_can_be_shipped() {
-		assertTrue(service.shipOrderById(1));
-		assertEquals(Status.SHIPPED,order1.getStatus());
-		assertEquals(LocalDate.now(),order1.getShipped());
-		verify(repository).read(1);
 	}
 	
 	@Test
@@ -132,11 +121,5 @@ public class DefaultOrderServiceUnitTest {
 		assertEquals(1,productB.getInStock());
 		assertEquals(2,productB.getInOrder());
 		verify(repository).read(2);
-	}
-	
-	@Test (expected = OrderNotFoundException.class)
-	public void updateOrderById_cannot_be_conducted_of_an_non_existing_order() {
-		service.shipOrderById(-1);
-		verify(repository).read(-1);
 	}
 }

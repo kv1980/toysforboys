@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,67 +17,58 @@ import be.vdab.toysforboys.valueobjects.Adress;
 import be.vdab.toysforboys.valueobjects.Orderdetail;
 
 public class OrderTest {
-	private Product product1,product2;
-	private Orderdetail detail1,detail2;
 	private Order order1, order2;
-	private Customer customer;
 	
 	@Before
 	public void before() {
-		product1 = new Product("testProduct1");
-			product1.addInStock(6);
-		product1.addInOrder(5);
-		product2 = new Product("testProduct2");
-			product2.addInStock(1);
-			product2.addInOrder(2);
-		detail1 = new Orderdetail(product1,5,BigDecimal.valueOf(10.01));
-		detail2 = new Orderdetail(product2,2,BigDecimal.valueOf(20.02));
-		customer = new Customer("testCustomer", new Adress("testStreetAndNumber","testPostalCode","testCity", new Country("testCountry")));
-		order1 = new Order(LocalDate.of(2018, 06, 19),customer);
-			order1.add(detail1);
-		order2 = new Order(LocalDate.of(2018, 06, 19),customer);
-			order2.add(detail1);
-			order2.add(detail2);
+		Orderdetail detail1 = new Orderdetail(new Product("testProduct1",6,5),5,BigDecimal.valueOf(10.01));
+		Orderdetail detail2 = new Orderdetail(new Product("testProduct2",1,2),2,BigDecimal.valueOf(20.02));
+		List<Orderdetail> orderdetails1 = new ArrayList<>();
+			orderdetails1.add(detail1);
+		List<Orderdetail>orderdetails2 = new ArrayList<>();
+			orderdetails2.add(detail1);
+			orderdetails2.add(detail2);
+		Customer customer = new Customer("testCustomer", new Adress("testStreetAndNumber","testPostalCode","testCity", new Country("testCountry")));
+		order1 = new Order(LocalDate.of(2018, 06, 19),customer,orderdetails1);
+		order2 = new Order(LocalDate.of(2018, 06, 19),customer,orderdetails2);
 	}
 	
 	@Test
-	public void add_must_add_an_existing_orderdetail() {
-		order1.add(detail2);
-		assertEquals(2,order1.getOrderdetails().size());
-		assertTrue(order1.getOrderdetails().contains(detail1));
-		assertTrue(order1.getOrderdetails().contains(detail2));
-	}
-	
-	@Test (expected = NullPointerException.class)
-	public void add_cannot_add_null() {
-		order1.add(null);
+	public void order_is_shippable_when_all_orderdetails_are_deliverable() {
+		assertTrue(order1.isShippable());
 	}
 	
 	@Test
-	public void isDeliverable_returns_true_when_all_orderdetails_are_deliverable() {
-		assertTrue(order1.isDeliverable());
+	public void order_is_not_shippable_when_one_or_more_orderdetails_are_not_deliverable() {
+		assertFalse(order2.isShippable());
 	}
 	
 	@Test
-	public void isDeliverable_returns_false_when_one_or_more_orderdetails_are_not_deliverable() {
-		assertFalse(order2.isDeliverable());
-	}
-	
-	@Test 
-	public void setStatusOnSHIPPED() {
-		assertEquals(Status.PROCESSING,order1.getStatus());
-		order1.setStatusOnSHIPPED();
+	public void status_of_shipped_order_must_be_SHIPPED() {
+		order1.ship();
 		assertEquals(Status.SHIPPED,order1.getStatus());
 	}
 	
-	@Test 
-	public void setShippedDateOnToday() {
-		order1.setShippedDateOnToday();
+	@Test
+	public void shipped_date_of_shipped_order_must_be_the_system_date() {
+		order1.ship();
 		assertEquals(LocalDate.now(),order1.getShipped());
 	}
 	
 	@Test
-	public void getTotalValue_counts_the_values_of_the_orderdetails() {
+	public void all_orderdetails_of_a_shipped_order_must_be_updated() {
+		order1.ship();
+		Product productA = order1.getOrderdetails().stream()
+				  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
+				  .findFirst()
+				  .get()
+				  .getProduct();
+		assertEquals(1,productA.getInStock());
+		assertEquals(0,productA.getInOrder());
+	}
+		
+	@Test
+	public void totalValue_counts_the_values_of_all_orderdetails() {
 		assertEquals(BigDecimal.valueOf(90.09),order2.getValue());
 	}
 }

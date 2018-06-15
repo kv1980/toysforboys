@@ -90,7 +90,7 @@ public class JpaOrderRepositoryTest extends AbstractTransactionalJUnit4SpringCon
 	@Test
 	public void read_has_to_find_orderdetails_of_an_existing_order() {
 		Order order = repository.read(idOfTestOrder()).get();
-		Set<Orderdetail> details = order.getOrderdetails();
+		List<Orderdetail> details = order.getOrderdetails();
 		for (Orderdetail detail : details) {
 			switch (detail.getProduct().getName()) {
 				case "testProductA" : assertEquals(5,detail.getOrdered());
