@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -35,7 +37,8 @@ public class DefaultOrderServiceUnitTest {
 	private Product product1,product2;
 	private Orderdetail detail1,detail2;
 	private Customer customer;
-	private Order order1,order2;	
+	private Order order1,order2;
+	private List<Order> unshippableOrders;
 	
 	@Before
 	public void before() {
@@ -56,7 +59,30 @@ public class DefaultOrderServiceUnitTest {
 		when(repository.read(-1)).thenReturn(Optional.empty());
 		when(repository.read(1)).thenReturn(Optional.of(order1));
 		when(repository.read(2)).thenReturn(Optional.of(order2));
+		unshippableOrders = new LinkedList<>();
+		unshippableOrders.add(order2);
+		when(repository.findUnshippedOrders()).thenReturn(unshippableOrders);
 		service = new DefaultOrderService(repository);
+	}
+	
+	@Test
+	public void read_may_not_find_an_non_existing_order() {
+		assertFalse(service.read(-1).isPresent());
+		verify(repository).read(-1);
+	}
+	
+	@Test
+	public void read_has_to_find_an_existing_order() {
+		assertTrue(service.read(1).isPresent());
+		verify(repository).read(1);
+	}
+	
+	@Test
+	public void findUnshippedOrders() {
+		List<Order> testOrders = service.findUnshippedOrders();
+		assertEquals(1,testOrders.size());
+		assertTrue(testOrders.contains(order2));
+		verify(repository).findUnshippedOrders();
 	}
 	
 	@Test
