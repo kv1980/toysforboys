@@ -2,6 +2,7 @@ package be.vdab.toysforboys.entities;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
@@ -34,37 +35,38 @@ public class OrderTest {
 	}
 	
 	@Test
-	public void order_is_shippable_when_all_orderdetails_are_deliverable() {
-		assertTrue(order1.isShippable());
-	}
-	
-	@Test
-	public void order_is_not_shippable_when_one_or_more_orderdetails_are_not_deliverable() {
-		assertFalse(order2.isShippable());
-	}
-	
-	@Test
-	public void status_of_shipped_order_must_be_SHIPPED() {
+	public void order_is_shipped_when_all_orderdetails_are_deliverable() {
 		order1.ship();
 		assertEquals(Status.SHIPPED,order1.getStatus());
-	}
-	
-	@Test
-	public void shipped_date_of_shipped_order_must_be_the_system_date() {
-		order1.ship();
 		assertEquals(LocalDate.now(),order1.getShipped());
-	}
-	
-	@Test
-	public void all_orderdetails_of_a_shipped_order_must_be_updated() {
-		order1.ship();
-		Product productA = order1.getOrderdetails().stream()
+		Product product1 = order1.getOrderdetails().stream()
 				  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
 				  .findFirst()
 				  .get()
 				  .getProduct();
-		assertEquals(1,productA.getInStock());
-		assertEquals(0,productA.getInOrder());
+		assertEquals(1,product1.getInStock());
+		assertEquals(0,product1.getInOrder());
+	}
+	
+	@Test
+	public void order_is_not_shipped_when_one_or_more_orderdetails_are_not_deliverable() {
+		order2.ship();
+		assertNotEquals(Status.SHIPPED,order2.getStatus());
+		assertNotEquals(LocalDate.now(),order2.getShipped());
+		Product product1 = order2.getOrderdetails().stream()
+				  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
+				  .findFirst()
+				  .get()
+				  .getProduct();
+		assertEquals(6,product1.getInStock());
+		assertEquals(5,product1.getInOrder());
+		Product product2 = order2.getOrderdetails().stream()
+				  .filter(detail -> detail.getProduct().getName().equals("testProduct2"))
+				  .findFirst()
+				  .get()
+				  .getProduct();
+		assertEquals(1,product2.getInStock());
+		assertEquals(2,product2.getInOrder());	
 	}
 		
 	@Test

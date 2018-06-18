@@ -8,5 +8,5 @@ import be.vdab.toysforboys.entities.Order;
 public interface OrderService {
 	Optional<Order> read(long id);
 	List<Order> findUnshippedOrders();
-	boolean shipOrderById(long id);
+	void shipOrderById(long id);
 }

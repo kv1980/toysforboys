@@ -51,17 +51,17 @@ public class DefaultOrderServiceIntegrationTest extends AbstractTransactionalJUn
 	}
 	
 	@Test
-	public void read_may_not_find_an_non_existing_order() {
+	public void an_non_existing_order_is_not_found() {
 		assertFalse(service.read(-1).isPresent());
 	}
 	
 	@Test
-	public void read_has_to_find_an_existing_order() {
+	public void an_existing_order_is_found() {
 		assertEquals("testCommentsA",service.read(idVanOrderA()).get().getComments());
 	}
 	
 	@Test
-	public void findUnshippedOrders() {
+	public void unshippedOrders_are_found() {
 		List<Order> testOrders = service.findUnshippedOrders();
 		boolean onlyUnshippedFound = true;
 		for (Order testOrder : testOrders) {
@@ -74,18 +74,18 @@ public class DefaultOrderServiceIntegrationTest extends AbstractTransactionalJUn
 	}
 	
 	@Test
-	public void updateOrderById_updates_order_status_and_date_when_order_can_be_shipped() {
+	public void order_status_and_date_are_updated_when_order_is_shipped() {
 		long id = idVanOrderA();
-		assertTrue(service.shipOrderById(id));
+		service.shipOrderById(id);
 		manager.flush();
 		assertEquals("SHIPPED",super.jdbcTemplate.queryForObject("select status from orders where id =?",String.class,id));
 		assertEquals(LocalDate.now(),super.jdbcTemplate.queryForObject("select shipped from orders where id =?",LocalDate.class,id));
 	}
 	
 	@Test
-	public void updateOrderById_updates_quantities_inStock_and_inOrder_of_all_ordered_products_when_order_can_be_shipped() {
+	public void quantities_inStock_and_inOrder_of_all_orderdetails_are_updated_when_order_is_shipped() {
 		long id = idVanOrderA();
-		assertTrue(service.shipOrderById(id));
+		service.shipOrderById(id);
 		manager.flush();
 		assertEquals(5,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductA'",Long.class).longValue());
 		assertEquals(0,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductA'",Long.class).longValue());
@@ -94,18 +94,18 @@ public class DefaultOrderServiceIntegrationTest extends AbstractTransactionalJUn
 	}
 
 	@Test
-	public void updateOrderById_does_not_update_order_status_and_date_when_order_cannot_be_shipped() {
+	public void order_status_and_date_is_not_updated_when_order_is_not_shipped() {
 		long id = idVanOrderB();
-		assertFalse(service.shipOrderById(id));
+		service.shipOrderById(id);
 		manager.flush();
 		assertNotEquals("SHIPPED",super.jdbcTemplate.queryForObject("select status from orders where id =?",String.class,id));
 		assertNotEquals(LocalDate.now(),super.jdbcTemplate.queryForObject("select shipped from orders where id =?",LocalDate.class,id));
 	}
 	
 	@Test
-	public void updateOrderById_does_not_update_quantities_inStock_and_inOrder_of_any_ordered_product_when_order_cannot_be_shipped() {
+	public void quantities_inStock_and_inOrder_of_all_orderdetails_are_not_updated_when_order_is_not_shipped() {
 		long id = idVanOrderB();
-		assertFalse(service.shipOrderById(id));
+		service.shipOrderById(id);
 		manager.flush();
 		assertEquals(10,super.jdbcTemplate.queryForObject("select inStock from products where name='testProductA'",Long.class).longValue());
 		assertEquals(5,super.jdbcTemplate.queryForObject("select inOrder from products where name='testProductA'",Long.class).longValue());

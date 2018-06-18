@@ -63,19 +63,19 @@ public class DefaultOrderServiceUnitTest {
 	}
 	
 	@Test
-	public void read_may_not_find_an_non_existing_order() {
+	public void an_non_existing_order_is_not_found() {
 		assertFalse(service.read(-1).isPresent());
 		verify(repository).read(-1);
 	}
 	
 	@Test
-	public void read_has_to_find_an_existing_order() {
+	public void an_existing_order_is_found() {
 		assertTrue(service.read(1).isPresent());
 		verify(repository).read(1);
 	}
 	
 	@Test
-	public void findUnshippedOrders() {
+	public void unshipped_orders_are_found() {
 		List<Order> testOrders = service.findUnshippedOrders();
 		assertEquals(1,testOrders.size());
 		assertTrue(testOrders.contains(order2));
@@ -83,8 +83,16 @@ public class DefaultOrderServiceUnitTest {
 	}
 	
 	@Test
-	public void updateOrderById_updates_productquantities_inStock_and_inOrder_when_order_can_be_shipped() {
-		assertTrue(service.shipOrderById(1));
+	public void order_status_and_date_are_updated_when_order_is_shipped() {
+		service.shipOrderById(1);
+		assertEquals(Status.SHIPPED,order1.getStatus());
+		assertEquals(LocalDate.now(),order1.getShipped());
+		verify(repository).read(1);
+	}
+	
+	@Test
+	public void quantities_inStock_and_inOrder_of_all_orderdetails_are_updated_when_order_can_be_shipped() {
+		service.shipOrderById(1);
 		Product productA = order1.getOrderdetails().stream()
 												  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
 												  .findFirst()
@@ -96,16 +104,16 @@ public class DefaultOrderServiceUnitTest {
 	}
 
 	@Test
-	public void updateOrderById_does_not_update_order_status_and_date_when_order_cannot_be_shipped() {
-		assertFalse(service.shipOrderById(2));
+	public void order_status_and_date_are_not_updated_when_order_cannot_be_shipped() {
+		service.shipOrderById(2);
 		assertNotEquals(Status.SHIPPED,order2.getStatus());
 		assertNotEquals(LocalDate.now(),order2.getShipped());
 		verify(repository).read(2);
 	}
 	
 	@Test
-	public void updateOrderById_does_not_update_quantities_inStock_and_inOrder_of_any_ordered_product_when_order_cannot_be_shipped() {
-		assertFalse(service.shipOrderById(2));
+	public void quantities_inStock_and_inOrder_of_all_orderdetatils_are_not_updated_when_order_cannot_be_shipped() {
+		service.shipOrderById(2);
 		Product productA = order2.getOrderdetails().stream()
 												  .filter(detail -> detail.getProduct().getName().equals("testProduct1"))
 												  .findFirst()

@@ -3,8 +3,6 @@ package be.vdab.toysforboys.services;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.OptimisticLockException;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,16 +32,8 @@ class DefaultOrderService implements OrderService {
 	
 	@Transactional(readOnly = false, isolation = Isolation.READ_COMMITTED)
 	@Override
-	public boolean shipOrderById(long id) {
-		try {
-			Order order = repository.read(id).get();
-			if (order.isShippable()) {
-				order.ship();
-				return true;
-			}
-			return false;
-		} catch (OptimisticLockException ex) {
-			return false;
-		}
+	public void shipOrderById(long id) {
+		Order order = repository.read(id).get();
+		order.ship();
 	}
 }

@@ -105,22 +105,24 @@ public class Order implements Serializable {
 				(previousSum, value) -> previousSum.add(value));
 	}
 
-	public boolean isShippable() {
+	public void ship() {
+		if (this.isShippable()) {
+			this.status = Status.SHIPPED;
+			this.shipped = LocalDate.now();
+			for (Orderdetail detail : orderdetails) {
+				Product product = detail.getProduct();
+				long quantity = detail.getOrdered();
+				product.deliver(quantity);
+			}	
+		}
+	}	
+	
+	private boolean isShippable() {
 		for (Orderdetail detail : orderdetails) {
 			if (!detail.isDeliverable()) {
 				return false;
 			}
 		}
 		return true;
-	}
-	
-	public void ship() {
-		this.status = Status.SHIPPED;
-		this.shipped = LocalDate.now();
-		for (Orderdetail detail : orderdetails) {
-			Product product = detail.getProduct();
-			long quantity = detail.getOrdered();
-			product.deliver(quantity);
-		}
 	}
 }
