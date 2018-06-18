@@ -7,48 +7,10 @@
 <vdab:head title="Unshipped orders" />
 <body>
 	<h1>Unshipped orders</h1>
-	<c:if test='${not empty param.notFoundIds}'>
-		<div id='failedErrorMessage'>
-			Shipping failed for orders(s) 
-			<c:forEach var='id' items='${param.notFoundIds}' varStatus='status'>
-				<c:choose>
-					<c:when test="${status.first}"></c:when>
-					<c:when test="${status.last}"> and </c:when>
-					<c:otherwise>, </c:otherwise>
-				</c:choose>
-				${id}
-				</c:forEach>
-			 : the order was not found.
+		<div id='failedErrorMessage'> 
+			<c:forEach var='error' items='${errors}'>
+			</c:forEach>
 		</div>
-	</c:if>
-	<c:if test='${not empty param.notEnoughStockIds}'>
-		<div id='failedErrorMessage'>
-			Shipping failed for orders(s) 
-			<c:forEach var='id' items='${param.notEnoughStockIds}' varStatus='status'>
-				<c:choose>
-					<c:when test="${status.first}"></c:when>
-					<c:when test="${status.last}"> and </c:when>
-					<c:otherwise>, </c:otherwise>
-				</c:choose>
-				${id}
-				</c:forEach>
-			 : there is not enough stock, please check the orderdetails for more information.
-		</div>
-	</c:if>
-		<c:if test='${not empty param.failedTransactionIds}'>
-		<div id='failedErrorMessage'>
-			Shipping failed for orders(s) 
-			<c:forEach var='id' items='${param.failedTransactionIds}' varStatus='status'>
-				<c:choose>
-					<c:when test="${status.first}"></c:when>
-					<c:when test="${status.last}"> and </c:when>
-					<c:otherwise>, </c:otherwise>
-				</c:choose>
-				${id}
-				</c:forEach>
-			 : the transaction failed, please try again.
-		</div>
-	</c:if>
 	<form action='/' method='post' id='form'>
 	<table id="unshippedOrders">
 		<tr>

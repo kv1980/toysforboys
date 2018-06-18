@@ -1,6 +1,7 @@
 package be.vdab.toysforboys.web;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +18,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import be.vdab.toysforboys.entities.Country;
 import be.vdab.toysforboys.entities.Customer;
@@ -30,6 +34,7 @@ public class IndexControllerTest {
 	private IndexController controller;
 	@Mock 
 	private OrderService orderService;
+	
 	List<Order> unshippedOrders;
 
 	@Before
@@ -47,10 +52,11 @@ public class IndexControllerTest {
 		unshippedOrders = new LinkedList<>();
 		unshippedOrders.add(order1);
 		unshippedOrders.add(order2);
-			
-		controller = new IndexController(orderService);
+		controller = new IndexController(orderService, new DefaultErrorList());
 		when(orderService.findUnshippedOrders())
-			.thenReturn(unshippedOrders);		
+			.thenReturn(unshippedOrders);
+		when(orderService.read(-1L))
+			.thenReturn(Optional.empty());
 	}
 	
 	@Test
@@ -63,5 +69,17 @@ public class IndexControllerTest {
 	public void indexController_transmits_unshippedOrders() {
 		ModelAndView modelAndView = controller.index();
 		assertTrue(modelAndView.getModel().containsKey("unshippedOrders"));
+	}
+	
+	@Test 
+	public void error_must_be_found_when_order_was_not_found() {
+		long[] ids= {-1L};
+		RedirectAttributesModelMap redirectAttributes=new RedirectAttributesModelMap();
+		String view = controller.afterSetAsShipped(ids,redirectAttributes);
+		assertFalse(redirectAttributes.isEmpty());
+		String key = "errors";
+		assertTrue(redirectAttributes.containsKey(key));
+		System.out.println(redirectAttributes.get(key));
+		System.out.println(redirectAttributes.get(key).getClass());
 	}
 }
