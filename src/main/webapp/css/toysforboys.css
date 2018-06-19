@@ -9,11 +9,15 @@ body {
 }
 
 #failedErrorMessage {
-	font-size: 1.5em;
+	font-size: 1.25em;
 	font-weight: bold;
 	color : red;
 	background-color : yellow;
 	margin-bottom : 0.67em;;
+}
+
+#failedErrorMessage p {
+	margin : 0;
 }
 
 th {

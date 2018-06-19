@@ -34,6 +34,8 @@ public class IndexControllerTest {
 	private IndexController controller;
 	@Mock 
 	private OrderService orderService;
+	@Mock
+	private Errors errors;
 	
 	List<Order> unshippedOrders;
 
@@ -52,7 +54,7 @@ public class IndexControllerTest {
 		unshippedOrders = new LinkedList<>();
 		unshippedOrders.add(order1);
 		unshippedOrders.add(order2);
-		controller = new IndexController(orderService, new DefaultErrorList());
+		controller = new IndexController(orderService, errors);
 		when(orderService.findUnshippedOrders())
 			.thenReturn(unshippedOrders);
 		when(orderService.read(-1L))
@@ -69,17 +71,5 @@ public class IndexControllerTest {
 	public void indexController_transmits_unshippedOrders() {
 		ModelAndView modelAndView = controller.index();
 		assertTrue(modelAndView.getModel().containsKey("unshippedOrders"));
-	}
-	
-	@Test 
-	public void error_must_be_found_when_order_was_not_found() {
-		long[] ids= {-1L};
-		RedirectAttributesModelMap redirectAttributes=new RedirectAttributesModelMap();
-		String view = controller.afterSetAsShipped(ids,redirectAttributes);
-		assertFalse(redirectAttributes.isEmpty());
-		String key = "errors";
-		assertTrue(redirectAttributes.containsKey(key));
-		System.out.println(redirectAttributes.get(key));
-		System.out.println(redirectAttributes.get(key).getClass());
 	}
 }

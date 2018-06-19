@@ -8,8 +8,21 @@
 <body>
 	<h1>Unshipped orders</h1>
 		<div id='failedErrorMessage'> 
-			<c:forEach var='error' items='${errors}'>
+			<c:if test='${not empty errors}'>
+				Shipment failed for the following order(s):
+				<c:forEach var='error' items='${errors}'>
+					<p>
+					<c:forEach var='id' items='${error.ids}' varStatus='status'>
+						<c:choose>
+							<c:when test='${status.first}'>- ${id}</c:when>
+							<c:when test='${status.last}'>and ${id} </c:when>
+							<c:otherwise>, ${id}</c:otherwise>
+						</c:choose>
+					</c:forEach>
+					: ${error.message}
+					</p>
 			</c:forEach>
+			</c:if>
 		</div>
 	<form action='/' method='post' id='form'>
 	<table id="unshippedOrders">
