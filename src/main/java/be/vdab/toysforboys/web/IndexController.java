@@ -1,13 +1,13 @@
 package be.vdab.toysforboys.web;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.persistence.OptimisticLockException;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,20 +20,33 @@ import be.vdab.toysforboys.services.OrderService;
 @RequestMapping("/")
 class IndexController {
 	private static final String VIEW = "index";
+	private static final String REDIRECT_START= "redirect:/1";
 	private static final String REDIRECT_VIEW = "redirect:/";
 	private final OrderService service;
 	private final Errors errors;
+	private static final int NUMBER_OF_ORDERS_IN_PAGE = 10;
 	
 	public IndexController(OrderService service, Errors errors) {
 		this.service = service;
 		this.errors = errors;
 	}
-
+	
 	@GetMapping
-	ModelAndView index() {
+	String index() {
+		return REDIRECT_START;
+	}
+
+	@GetMapping ("{pagenr}")
+	ModelAndView index(@PathVariable int pagenr) {
 		ModelAndView modelAndView = new ModelAndView(VIEW);
 		modelAndView.addObject("errors", errors.getErrors());
-		modelAndView.addObject("unshippedOrders", service.findUnshippedOrders());
+		List<Order> unshippedOrderList = service.findUnshippedOrders();
+		int numberOfPages = unshippedOrderList.size()/NUMBER_OF_ORDERS_IN_PAGE+1;
+		int indexFirst = (pagenr-1)*NUMBER_OF_ORDERS_IN_PAGE;
+		int indexLast = (pagenr < numberOfPages) ? (pagenr*NUMBER_OF_ORDERS_IN_PAGE)+1 : unshippedOrderList.size()-1; 
+		modelAndView.addObject("numberOfPages",numberOfPages);
+		modelAndView.addObject("unshippedOrders", service.findUnshippedOrders().subList(indexFirst,indexLast));
+		modelAndView.addObject("pagenr",pagenr);
 		return modelAndView;
 	}
 	

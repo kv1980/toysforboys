@@ -61,7 +61,7 @@ public class IndexControllerTest {
 			.thenReturn(Optional.empty());
 	}
 	
-	@Test
+/*	@Test
 	public void indexController_uses_index_dot_jsp() {
 		ModelAndView modelAndView = controller.index();
 		assertEquals("index",modelAndView.getViewName());
@@ -71,5 +71,5 @@ public class IndexControllerTest {
 	public void indexController_transmits_unshippedOrders() {
 		ModelAndView modelAndView = controller.index();
 		assertTrue(modelAndView.getModel().containsKey("unshippedOrders"));
-	}
+	}*/
 }
